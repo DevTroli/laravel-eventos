@@ -7,14 +7,10 @@ use Illuminate\Http\Request;
 
 class AppController extends Controller
 {
-    /**
-     * Página inicial - mostra ingressos em destaque.
-     */
     public function index()
     {
         $ingressos = Ingresso::take(6)->get();
 
-        // Ingressos em destaque (exemplo estático para demonstração)
         $destaques = [
             [
                 'jogo' => 'Final da Copa do Mundo 2026',
@@ -42,26 +38,17 @@ class AppController extends Controller
         ]);
     }
 
-    /**
-     * Lista todos os ingressos disponíveis.
-     */
     public function ingressos()
     {
         $ingressos = Ingresso::all();
         return view('ingressos', ['ingressos' => $ingressos]);
     }
 
-    /**
-     * Mostra formulário para novo ingresso.
-     */
     public function create()
     {
         return view('ingressos-create');
     }
 
-    /**
-     * Salva novo ingresso.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -81,18 +68,12 @@ class AppController extends Controller
         return redirect()->route('ingressos');
     }
 
-    /**
-     * Mostra formulário para editar ingresso.
-     */
     public function edit($id)
     {
         $ingresso = Ingresso::findOrFail($id);
         return view('ingressos-edit', ['ingresso' => $ingresso]);
     }
 
-    /**
-     * Atualiza ingresso existente.
-     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -113,9 +94,6 @@ class AppController extends Controller
         return redirect()->route('ingressos');
     }
 
-    /**
-     * Remove ingresso.
-     */
     public function destroy($id)
     {
         $ingresso = Ingresso::findOrFail($id);
@@ -124,25 +102,16 @@ class AppController extends Controller
         return redirect()->route('ingressos');
     }
 
-    /**
-     * Página Quem Somos.
-     */
     public function sobre()
     {
         return view('sobre');
     }
 
-    /**
-     * Página de Contato.
-     */
     public function contato()
     {
         return view('contato');
     }
 
-    /**
-     * Página de Login.
-     */
     public function login()
     {
         return view('login');

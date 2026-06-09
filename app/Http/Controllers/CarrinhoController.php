@@ -94,7 +94,6 @@ class CarrinhoController extends Controller
 
     public function checkout()
     {
-        // Exige autenticação para checkout
         if (!auth()->check()) {
             return redirect()->route('login')
                 ->with('info', 'Faça login ou crie uma conta para finalizar sua compra.');
@@ -111,7 +110,6 @@ class CarrinhoController extends Controller
 
     public function confirmar(Request $request)
     {
-        // Exige autenticação
         if (!auth()->check()) {
             return redirect()->route('login')->with('erro', 'Você precisa estar logado para finalizar a compra.');
         }
@@ -122,7 +120,6 @@ class CarrinhoController extends Controller
             return redirect()->route('ingressos.index')->with('erro', 'Seu carrinho está vazio!');
         }
 
-        // Calcular total e verificar disponibilidade
         $total = 0;
         $itensPedido = [];
 
@@ -144,7 +141,6 @@ class CarrinhoController extends Controller
             ];
         }
 
-        // Criar pedido com dados do usuário logado
         $pedido = Pedido::create([
             'user_id' => auth()->id(),
             'total' => $total,
@@ -153,7 +149,6 @@ class CarrinhoController extends Controller
             'cliente_email' => auth()->user()->email,
         ]);
 
-        // Criar itens do pedido e decrementar estoque
         foreach ($itensPedido as $item) {
             PedidoItem::create([
                 'pedido_id' => $pedido->id,
@@ -162,11 +157,9 @@ class CarrinhoController extends Controller
                 'preco_unitario' => $item['preco_unitario'],
             ]);
 
-            // Decrementar estoque
             $item['ingresso']->decrement('quantidade', $item['quantidade']);
         }
 
-        // Limpar carrinho
         session()->forget('carrinho');
 
         return redirect()->route('pedidos.show', $pedido->id)->with('sucesso', 'Compra realizada com sucesso!');
@@ -174,7 +167,6 @@ class CarrinhoController extends Controller
 
     public function meusPedidos()
     {
-        // Exige autenticação
         if (!auth()->check()) {
             return redirect()->route('login')->with('erro', 'Faça login para visualizar seus pedidos.');
         }

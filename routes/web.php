@@ -10,13 +10,11 @@ Route::get('/', function () {
     return view('welcome', compact('destaques'));
 });
 
-// Rotas públicas (e-commerce)
 Route::get('/ingressos', [AdminController::class, 'ingressosIndexPublic'])->name('ingressos.index');
 Route::get('/ingresso/{id}', [AdminController::class, 'show'])->name('ingressos.show');
 Route::get('/sobre', function() { return view('sobre'); })->name('sobre');
 Route::get('/contato', function() { return view('contato'); })->name('contato');
 
-// Carrinho
 Route::get('/carrinho', [CarrinhoController::class, 'index'])->name('carrinho.index');
 Route::post('/ingresso/{id}/carrinho', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
 Route::post('/carrinho/remover/{id}', [CarrinhoController::class, 'remover'])->name('carrinho.remover');
@@ -24,11 +22,9 @@ Route::post('/carrinho/atualizar/{id}', [CarrinhoController::class, 'atualizar']
 Route::get('/carrinho/checkout', [CarrinhoController::class, 'checkout'])->name('carrinho.checkout');
 Route::post('/carrinho/confirmar', [CarrinhoController::class, 'confirmar'])->name('carrinho.confirmar');
 
-// Pedidos do usuário (auth ou guest com email)
 Route::get('/meus-pedidos', [CarrinhoController::class, 'meusPedidos'])->name('pedidos.index');
 Route::get('/meus-pedidos/{id}', [CarrinhoController::class, 'show'])->name('pedidos.show');
 
-// Admin (auth)
 Route::get('/admin', [AdminController::class, 'dashboard'])->middleware('auth')->name('admin.dashboard');
 Route::get('/admin/ingressos', [AdminController::class, 'ingressosIndex'])->middleware('auth')->name('admin.ingressos.index');
 Route::get('/admin/ingressos/criar', [AdminController::class, 'ingressosCreate'])->middleware('auth')->name('admin.ingressos.create');
