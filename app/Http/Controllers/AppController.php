@@ -2,93 +2,149 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Evento;
+use App\Models\Ingresso;
 use Illuminate\Http\Request;
 
 class AppController extends Controller
 {
+    /**
+     * Página inicial - mostra ingressos em destaque.
+     */
     public function index()
     {
-        $tb_eventos = Evento::all();
+        $ingressos = Ingresso::take(6)->get();
 
-        $frase = 'Laravel é uma coisa muito ruim';
-
-        $eventos = [
+        // Ingressos em destaque (exemplo estático para demonstração)
+        $destaques = [
             [
-                'nome' => 'Laravel Básico',
-                'preco' => 50.50,
-                'vagas' => 150,
+                'jogo' => 'Final da Copa do Mundo 2026',
+                'setor' => 'Cadeiras Inferiores',
+                'preco' => 1500.00,
+                'quantidade' => 100,
             ],
             [
-                'nome' => 'Laravel Intermediario',
-                'preco' => 35.50,
-                'vagas' => 60,
+                'jogo' => 'Brasil vs Argentina - Quartas de Final',
+                'setor' => 'Arquibancada Norte',
+                'preco' => 350.00,
+                'quantidade' => 250,
+            ],
+            [
+                'jogo' => 'Espanha vs Portugal - Semi-Final',
+                'setor' => 'Camarotes VIP',
+                'preco' => 2200.00,
+                'quantidade' => 50,
             ],
         ];
 
-        return view('welcome', ['texto' => $frase, 'event' => $eventos, 'tabela' => $tb_eventos]);
+        return view('welcome', [
+            'destaques' => $destaques,
+            'ingressos' => $ingressos
+        ]);
     }
 
-    public function eventos()
+    /**
+     * Lista todos os ingressos disponíveis.
+     */
+    public function ingressos()
     {
-        $tb_eventos = Evento::all();
-
-        return view('eventos', ['tabela' => $tb_eventos]);
+        $ingressos = Ingresso::all();
+        return view('ingressos', ['ingressos' => $ingressos]);
     }
 
+    /**
+     * Mostra formulário para novo ingresso.
+     */
     public function create()
     {
-        return view('eventos-create');
+        return view('ingressos-create');
     }
 
+    /**
+     * Salva novo ingresso.
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'nome' => 'required|string|max:255',
+            'jogo' => 'required|string|max:255',
+            'setor' => 'required|string|max:100',
             'preco' => 'required|numeric|min:0',
             'quantidade' => 'required|integer|min:0',
         ]);
 
-        Evento::create([
-            'nome' => $request->nome,
+        Ingresso::create([
+            'jogo' => $request->jogo,
+            'setor' => $request->setor,
             'preco' => $request->preco,
             'quantidade' => $request->quantidade,
         ]);
 
-        return redirect()->route('eventos');
+        return redirect()->route('ingressos');
     }
 
+    /**
+     * Mostra formulário para editar ingresso.
+     */
     public function edit($id)
     {
-        $evento = Evento::findOrFail($id);
-
-        return view('eventos-edit', ['evento' => $evento]);
+        $ingresso = Ingresso::findOrFail($id);
+        return view('ingressos-edit', ['ingresso' => $ingresso]);
     }
 
+    /**
+     * Atualiza ingresso existente.
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nome' => 'required|string|max:255',
+            'jogo' => 'required|string|max:255',
+            'setor' => 'required|string|max:100',
             'preco' => 'required|numeric|min:0',
             'quantidade' => 'required|integer|min:0',
         ]);
 
-        $evento = Evento::findOrFail($id);
-
-        $evento->update([
-            'nome' => $request->nome,
+        $ingresso = Ingresso::findOrFail($id);
+        $ingresso->update([
+            'jogo' => $request->jogo,
+            'setor' => $request->setor,
             'preco' => $request->preco,
             'quantidade' => $request->quantidade,
         ]);
 
-        return redirect()->route('eventos');
+        return redirect()->route('ingressos');
     }
 
+    /**
+     * Remove ingresso.
+     */
     public function destroy($id)
     {
-        $evento = Evento::findOrFail($id);
-        $evento->delete();
+        $ingresso = Ingresso::findOrFail($id);
+        $ingresso->delete();
 
-        return redirect()->route('eventos');
+        return redirect()->route('ingressos');
+    }
+
+    /**
+     * Página Quem Somos.
+     */
+    public function sobre()
+    {
+        return view('sobre');
+    }
+
+    /**
+     * Página de Contato.
+     */
+    public function contato()
+    {
+        return view('contato');
+    }
+
+    /**
+     * Página de Login.
+     */
+    public function login()
+    {
+        return view('login');
     }
 }

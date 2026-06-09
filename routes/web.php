@@ -1,17 +1,20 @@
 <?php
 
 use App\Http\Controllers\AppController;
-// importa a controller
 use Illuminate\Support\Facades\Route;
 
+// Rota da página inicial
 Route::get('/', [AppController::class, 'index'])->name('home');
 
-Route::get('/eventos', [AppController::class, 'eventos'])->name('eventos');
+// Rotas de gerenciamento de ingressos
+Route::get('/ingressos', [AppController::class, 'ingressos'])->name('ingressos');
+Route::get('/ingressos/create', [AppController::class, 'create'])->name('ingressos-create');
+Route::post('/ingressos/store', [AppController::class, 'store'])->name('ingressos-store');
+Route::get('/ingressos/{id}/edit', [AppController::class, 'edit'])->name('ingressos-edit');
+Route::post('/ingressos/{id}/update', [AppController::class, 'update'])->name('ingressos-update');
+Route::post('/ingressos/{id}/destroy', [AppController::class, 'destroy'])->name('ingressos-destroy');
 
-Route::get('/eventos/create', [AppController::class, 'create'])->name('eventos-create');
-Route::post('/eventos/store', [AppController::class, 'store'])->name('eventos-store');
-
-Route::get('/eventos/{id}/edit', [AppController::class, 'edit'])->name('eventos-edit');
-Route::post('/eventos/{id}/update', [AppController::class, 'update'])->name('eventos-update');
-
-Route::post('/eventos/{id}/destroy', [AppController::class, 'destroy'])->name('eventos-destroy');
+// Novas rotas institucionais
+Route::get('/sobre', [AppController::class, 'sobre'])->name('sobre');
+Route::get('/contato', [AppController::class, 'contato'])->name('contato');
+Route::get('/login', [AppController::class, 'login'])->name('login');
