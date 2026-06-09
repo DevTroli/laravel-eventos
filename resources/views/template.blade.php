@@ -13,20 +13,47 @@
 
 <header class="header">
     <div class="container header-container">
-        <a href="{{ route('home') }}" class="logo">
+        <a href="/" class="logo">
             <span class="logo-text">COPA</span>
             <span class="logo-year">2026</span>
         </a>
 
         <nav class="nav-desktop">
-            <a href="{{ route('home') }}" class="nav-link">Início</a>
-            <a href="{{ route('ingressos') }}" class="nav-link">Ingressos</a>
+            <a href="/" class="nav-link">Início</a>
+            <a href="{{ route('ingressos.index') }}" class="nav-link">Ingressos</a>
             <a href="{{ route('sobre') }}" class="nav-link">Quem Somos</a>
             <a href="{{ route('contato') }}" class="nav-link">Contato</a>
         </nav>
 
-        <div class="header-actions">
-            <a href="{{ route('login') }}" class="btn-login">Entrar</a>
+        <div class="header-actions" style="display: flex; align-items: center; gap: 1rem;">
+            @auth
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="font-size: 0.875rem; color: var(--text-light);">{{ auth()->user()->email }}</span>
+                    <a href="{{ route('pedidos.index') }}" class="btn-login" style="font-size: 0.875rem;">Meus Pedidos</a>
+                    <a href="{{ route('admin.dashboard') }}" class="btn-login" style="font-size: 0.875rem;">Admin</a>
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Sair</button>
+                    </form>
+                </div>
+            @else
+                <a href="{{ route('register') }}" class="btn-outline" style="font-size: 0.875rem;">Criar Conta</a>
+                <a href="{{ route('login') }}" class="btn-login">Entrar</a>
+            @endauth
+
+            <a href="{{ route('carrinho.index') }}" class="btn-outline" style="position: relative; padding: 0.5rem; display: flex; align-items: center;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                @if(session('carrinho') && count(session('carrinho')) > 0)
+                    <span style="position: absolute; top: -5px; right: -5px; background: #059669; color: white; font-size: 0.625rem; font-weight: 700; padding: 0.125rem 0.375rem; border-radius: 9999px; min-width: 16px; text-align: center;">
+                        {{ count(session('carrinho')) }}
+                    </span>
+                @endif
+            </a>
+
             <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
                 <span></span>
                 <span></span>
@@ -37,11 +64,32 @@
 
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-        <a href="{{ route('home') }}" class="mobile-nav-link">Início</a>
-        <a href="{{ route('ingressos') }}" class="mobile-nav-link">Ingressos</a>
+        <a href="/" class="mobile-nav-link">Início</a>
+        <a href="{{ route('ingressos.index') }}" class="mobile-nav-link">Ingressos</a>
         <a href="{{ route('sobre') }}" class="mobile-nav-link">Quem Somos</a>
         <a href="{{ route('contato') }}" class="mobile-nav-link">Contato</a>
-        <a href="{{ route('login') }}" class="mobile-nav-link">Entrar</a>
+        @auth
+            <div style="padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.875rem; color: var(--text-light);">
+                {{ auth()->user()->email }}
+            </div>
+            <a href="{{ route('admin.dashboard') }}" class="mobile-nav-link">Admin</a>
+            <a href="{{ route('pedidos.index') }}" class="mobile-nav-link">Meus Pedidos</a>
+            <form action="{{ route('logout') }}" method="POST" style="padding: 0.75rem 1rem;">
+                @csrf
+                <button type="submit" class="btn-outline" style="width: 100%; text-align: center;">Sair</button>
+            </form>
+        @else
+            <a href="{{ route('register') }}" class="mobile-nav-link">Criar Conta</a>
+            <a href="{{ route('login') }}" class="mobile-nav-link">Entrar</a>
+        @endauth
+        <a href="{{ route('carrinho.index') }}" class="mobile-nav-link" style="display: flex; align-items: center; gap: 0.5rem;">
+            🛒 Carrinho
+            @if(session('carrinho') && count(session('carrinho')) > 0)
+                <span style="background: #059669; color: white; font-size: 0.75rem; font-weight: 700; padding: 0.125rem 0.5rem; border-radius: 9999px;">
+                    {{ count(session('carrinho')) }}
+                </span>
+            @endif
+        </a>
     </div>
 </header>
 
@@ -87,8 +135,8 @@
         <div class="footer-section">
             <h4>Links Rápidos</h4>
             <ul class="footer-links">
-                <li><a href="{{ route('home') }}">Início</a></li>
-                <li><a href="{{ route('ingressos') }}">Comprar Ingressos</a></li>
+                <li><a href="/">Início</a></li>
+                <li><a href="{{ route('ingressos.index') }}">Comprar Ingressos</a></li>
                 <li><a href="{{ route('sobre') }}">Quem Somos</a></li>
                 <li><a href="{{ route('contato') }}">Contato</a></li>
             </ul>

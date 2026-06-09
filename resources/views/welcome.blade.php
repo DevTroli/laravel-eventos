@@ -16,14 +16,14 @@
         <h1 class="hero-title">Copa do Mundo FIFA 2026</h1>
         <p class="hero-subtitle">Vivencie a maior competição de futebol do planeta. Garanta seu lugar na história!</p>
         <div class="hero-actions">
-            <a href="{{ route('ingressos') }}" class="btn-primary">
+            <a href="{{ route('ingressos.index') }}" class="btn-primary">
                 Comprar Ingressos
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
             </a>
-            <a href="{{ route('sobre') }}" class="btn-secondary">Saiba Mais</a>
+            <a href="/" class="btn-secondary">Saiba Mais</a>
         </div>
     </div>
 </section>
@@ -39,7 +39,7 @@
 
         <div class="cards-grid">
             @foreach($destaques as $ingresso)
-            <a href="{{ route('ingressos') }}" class="card">
+            <a href="{{ route('ingressos.show', $ingresso['id']) }}" class="card">
                 <div class="card-content">
                     <div class="card-header">
                         <span class="card-tag">Destaque</span>
@@ -64,7 +64,7 @@
         </div>
 
         <div style="text-align: center; margin-top: 2rem;">
-            <a href="{{ route('ingressos') }}" class="btn-outline">
+            <a href="{{ route('ingressos.index') }}" class="btn-outline">
                 Ver Todos os Ingressos
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
