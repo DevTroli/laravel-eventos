@@ -13,7 +13,7 @@
             </svg>
             Edição 2026
         </span>
-        <h1>Copa do Mundo FIFA 2026</h1>
+        <h1 class="hero-title">Copa do Mundo FIFA 2026</h1>
         <p class="hero-subtitle">Vivencie a maior competição de futebol do planeta. Garanta seu lugar na história!</p>
         <div class="hero-actions">
             <a href="{{ route('ingressos') }}" class="btn-primary">
