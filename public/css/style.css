@@ -1,0 +1,344 @@
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1a1a2e;
+    background: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.6;
+}
+
+/* ===== Header ===== */
+.header {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 0 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+}
+
+.logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.nav {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-link {
+    color: #cdd5e0;
+    text-decoration: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.nav-link:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+/* ===== Main Content ===== */
+.main-content {
+    flex: 1;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+h1 {
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+    color: #1a1a2e;
+}
+
+h2 {
+    font-size: 1.35rem;
+    margin-bottom: 1rem;
+    color: #1a1a2e;
+}
+
+p {
+    margin-bottom: 0.75rem;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 1rem 0;
+}
+
+/* ===== Data Table ===== */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.data-table thead {
+    background: #1a1a2e;
+    color: #fff;
+}
+
+.data-table th {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.data-table tbody tr:hover {
+    background: #f0f4ff;
+}
+
+.data-table .actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* ===== Forms ===== */
+.form-crud {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    max-width: 480px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+form input[type="text"],
+form input[type="number"] {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.2s;
+}
+
+form input[type="text"]:focus,
+form input[type="number"]:focus {
+    outline: none;
+    border-color: #4361ee;
+    box-shadow: 0 0 0 3px rgba(67,97,238,0.15);
+}
+
+form br {
+    display: none;
+}
+
+/* ===== Buttons ===== */
+.btn-link {
+    display: inline-block;
+    padding: 0.55rem 1.1rem;
+    background: #4361ee;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.2s;
+    margin-bottom: 1rem;
+}
+
+.btn-link:hover {
+    background: #3a56d4;
+}
+
+.btn-submit {
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
+    background: #4361ee;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-submit:hover {
+    background: #3a56d4;
+}
+
+.btn-delete {
+    padding: 0.4rem 0.9rem;
+    background: #e63946;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-delete:hover {
+    background: #c62828;
+}
+
+/* ===== Footer ===== */
+.footer {
+    background: #1a1a2e;
+    color: #cdd5e0;
+    text-align: center;
+    padding: 1.2rem;
+    font-size: 0.85rem;
+    margin-top: auto;
+}
+
+/* ===== Validation Errors ===== */
+.validation-errors {
+    background: #fce4ec;
+    color: #c62828;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.validation-errors ul {
+    margin-left: 1.25rem;
+}
+
+/* ===== Responsive: Tablet ===== */
+@media (max-width: 768px) {
+    .header-inner {
+        height: auto;
+        padding: 0.75rem 0;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .nav {
+        gap: 0.5rem;
+    }
+
+    h1 {
+        font-size: 1.4rem;
+    }
+
+    /* Card-style table on mobile */
+    .data-table thead {
+        display: none;
+    }
+
+    .data-table,
+    .data-table tbody,
+    .data-table tr,
+    .data-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .data-table tbody tr {
+        background: #fff;
+        margin-bottom: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        padding: 1rem;
+        border: 1px solid #eee;
+    }
+
+    .data-table td {
+        padding: 0.35rem 0;
+        border-bottom: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .data-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: #666;
+        flex: 1;
+    }
+
+    .data-table td.actions {
+        justify-content: flex-end;
+        margin-top: 0.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid #eee;
+    }
+
+    .data-table td.actions::before {
+        display: none;
+    }
+
+    .form-crud {
+        max-width: 100%;
+    }
+}
+
+/* ===== Responsive: Small phone ===== */
+@media (max-width: 480px) {
+    .main-content {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .btn-link {
+        width: 100%;
+        text-align: center;
+    }
+
+    .btn-submit {
+        width: 100%;
+    }
+
+    .data-table tbody tr {
+        padding: 0.75rem;
+    }
+}
