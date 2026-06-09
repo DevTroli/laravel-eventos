@@ -63,7 +63,7 @@
     </div>
 
     <div style="margin-top: 1.5rem;">
-        <a href="{{ route('meus-pedidos') }}" class="btn-outline">← Voltar aos Meus Pedidos</a>
+        <a href="{{ route('pedidos.index') }}" class="btn-outline">← Voltar aos Meus Pedidos</a>
     </div>
 </div>
 @endsection

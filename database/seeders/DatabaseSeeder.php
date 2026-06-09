@@ -15,6 +15,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Cria user admin
+        $admin = User::create([
+            'name' => 'Admin',
+            'email' => 'admin@copa2026.com',
+            'password' => bcrypt('password'),
+        ]);
+        $admin->is_admin = true;
+        $admin->save();
+
+        // Cria user comum
+        User::create([
+            'name' => 'Usuário Teste',
+            'email' => 'user@copa2026.com',
+            'password' => bcrypt('password'),
+        ]);
+
         // Cria ingressos de exemplo para a Copa 2026
         Ingresso::create([
             'jogo' => 'Brasil vs Argentina - Quartas de Final',

@@ -1,31 +1,32 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
-    </div>
+@extends('template')
 
-    @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+@section('titulo', 'Verificar Email - Copa 2026')
+
+@section('conteudo')
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1 class="auth-title">Verificar email</h1>
+            <p class="auth-subtitle">Obrigado por se cadastrar! Clique no link que enviamos para seu email para verificar sua conta.</p>
         </div>
-    @endif
 
-    <div class="mt-4 flex items-center justify-between">
-        <form method="POST" action="{{ route('verification.send') }}">
-            @csrf
+        @if (session('status') == 'verification-link-sent')
+        <div class="auth-alert">
+            Um novo link de verificação foi enviado para o email informado no cadastro.
+        </div>
+        @endif
 
-            <div>
-                <x-primary-button>
-                    {{ __('Resend Verification Email') }}
-                </x-primary-button>
-            </div>
-        </form>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem;">
+            <form method="POST" action="{{ route('verification.send') }}">
+                @csrf
+                <button type="submit" class="btn-primary" style="width: 100%;">Reenviar email de verificação</button>
+            </form>
 
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-
-            <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {{ __('Log Out') }}
-            </button>
-        </form>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn-outline" style="width: 100%; text-align: center;">Sair</button>
+            </form>
+        </div>
     </div>
-</x-guest-layout>
+</div>
+@endsection

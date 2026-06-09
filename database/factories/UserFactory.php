@@ -33,6 +33,24 @@ class UserFactory extends Factory
         ];
     }
 
+    public function admin(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->is_admin = true;
+            $user->saveQuietly();
+        });
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            if ($user->is_admin === null) {
+                $user->is_admin = false;
+                $user->saveQuietly();
+            }
+        });
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      */

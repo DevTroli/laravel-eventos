@@ -34,13 +34,14 @@ class AppController extends Controller
 
         return view('welcome', [
             'destaques' => $destaques,
-            'ingressos' => $ingressos
+            'ingressos' => $ingressos,
         ]);
     }
 
     public function ingressos()
     {
         $ingressos = Ingresso::all();
+
         return view('ingressos', ['ingressos' => $ingressos]);
     }
 
@@ -71,6 +72,7 @@ class AppController extends Controller
     public function edit($id)
     {
         $ingresso = Ingresso::findOrFail($id);
+
         return view('ingressos-edit', ['ingresso' => $ingresso]);
     }
 

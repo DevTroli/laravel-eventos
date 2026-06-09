@@ -6,19 +6,20 @@ use App\Models\Ingresso;
 use App\Models\Pedido;
 use App\Models\PedidoItem;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
     public function ingressosIndexPublic()
     {
         $ingressos = Ingresso::where('quantidade', '>', 0)->orderBy('created_at', 'desc')->get();
+
         return view('ingressos', compact('ingressos'));
     }
 
     public function show($id)
     {
         $ingresso = Ingresso::findOrFail($id);
+
         return view('ingressos-detalhe', compact('ingresso'));
     }
 
@@ -45,8 +46,8 @@ class AdminController extends Controller
 
     public function ingressosIndex()
     {
-        $this->middleware('auth');
         $ingressos = Ingresso::orderBy('created_at', 'desc')->get();
+
         return view('admin.ingressos.index', compact('ingressos'));
     }
 
@@ -64,7 +65,7 @@ class AdminController extends Controller
             'quantidade' => 'required|integer|min:0',
         ]);
 
-        Ingresso::create($request->all());
+        Ingresso::create($request->only(['jogo', 'setor', 'preco', 'quantidade']));
 
         return redirect()->route('admin.ingressos.index')->with('sucesso', 'Ingresso cadastrado com sucesso!');
     }
@@ -72,6 +73,7 @@ class AdminController extends Controller
     public function ingressosEdit($id)
     {
         $ingresso = Ingresso::findOrFail($id);
+
         return view('admin.ingressos.edit', compact('ingresso'));
     }
 
@@ -85,7 +87,7 @@ class AdminController extends Controller
         ]);
 
         $ingresso = Ingresso::findOrFail($id);
-        $ingresso->update($request->all());
+        $ingresso->update($request->only(['jogo', 'setor', 'preco', 'quantidade']));
 
         return redirect()->route('admin.ingressos.index')->with('sucesso', 'Ingresso atualizado com sucesso!');
     }

@@ -12,30 +12,38 @@ Route::get('/', function () {
 
 Route::get('/ingressos', [AdminController::class, 'ingressosIndexPublic'])->name('ingressos.index');
 Route::get('/ingresso/{id}', [AdminController::class, 'show'])->name('ingressos.show');
-Route::get('/sobre', function() { return view('sobre'); })->name('sobre');
-Route::get('/contato', function() { return view('contato'); })->name('contato');
+Route::get('/sobre', function () { return view('sobre'); })->name('sobre');
+Route::get('/contato', function () { return view('contato'); })->name('contato');
 
 Route::get('/carrinho', [CarrinhoController::class, 'index'])->name('carrinho.index');
-Route::post('/ingresso/{id}/carrinho', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
-Route::post('/carrinho/remover/{id}', [CarrinhoController::class, 'remover'])->name('carrinho.remover');
-Route::post('/carrinho/atualizar/{id}', [CarrinhoController::class, 'atualizar'])->name('carrinho.atualizar');
-Route::get('/carrinho/checkout', [CarrinhoController::class, 'checkout'])->name('carrinho.checkout');
-Route::post('/carrinho/confirmar', [CarrinhoController::class, 'confirmar'])->name('carrinho.confirmar');
 
-Route::get('/meus-pedidos', [CarrinhoController::class, 'meusPedidos'])->name('pedidos.index');
-Route::get('/meus-pedidos/{id}', [CarrinhoController::class, 'show'])->name('pedidos.show');
+Route::middleware('auth')->group(function () {
+    Route::post('/ingresso/{id}/carrinho', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
+    Route::post('/carrinho/remover/{id}', [CarrinhoController::class, 'remover'])->name('carrinho.remover');
+    Route::post('/carrinho/atualizar/{id}', [CarrinhoController::class, 'atualizar'])->name('carrinho.atualizar');
+    Route::get('/carrinho/checkout', [CarrinhoController::class, 'checkout'])->name('carrinho.checkout');
+    Route::post('/carrinho/confirmar', [CarrinhoController::class, 'confirmar'])->name('carrinho.confirmar');
 
-Route::get('/admin', [AdminController::class, 'dashboard'])->middleware('auth')->name('admin.dashboard');
-Route::get('/admin/ingressos', [AdminController::class, 'ingressosIndex'])->middleware('auth')->name('admin.ingressos.index');
-Route::get('/admin/ingressos/criar', [AdminController::class, 'ingressosCreate'])->middleware('auth')->name('admin.ingressos.create');
-Route::post('/admin/ingressos', [AdminController::class, 'ingressosStore'])->middleware('auth')->name('admin.ingressos.store');
-Route::get('/admin/ingressos/{id}/editar', [AdminController::class, 'ingressosEdit'])->middleware('auth')->name('admin.ingressos.edit');
-Route::put('/admin/ingressos/{id}', [AdminController::class, 'ingressosUpdate'])->middleware('auth')->name('admin.ingressos.update');
-Route::delete('/admin/ingressos/{id}', [AdminController::class, 'ingressosDestroy'])->middleware('auth')->name('admin.ingressos.destroy');
-Route::get('/admin/pedidos', [AdminController::class, 'pedidosIndex'])->middleware('auth')->name('admin.pedidos.index');
+    Route::get('/meus-pedidos', [CarrinhoController::class, 'meusPedidos'])->name('pedidos.index');
+    Route::get('/meus-pedidos/{id}', [CarrinhoController::class, 'show'])->name('pedidos.show');
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/ingressos', [AdminController::class, 'ingressosIndex'])->name('admin.ingressos.index');
+    Route::get('/ingressos/criar', [AdminController::class, 'ingressosCreate'])->name('admin.ingressos.create');
+    Route::post('/ingressos', [AdminController::class, 'ingressosStore'])->name('admin.ingressos.store');
+    Route::get('/ingressos/{id}/editar', [AdminController::class, 'ingressosEdit'])->name('admin.ingressos.edit');
+    Route::put('/ingressos/{id}', [AdminController::class, 'ingressosUpdate'])->name('admin.ingressos.update');
+    Route::delete('/ingressos/{id}', [AdminController::class, 'ingressosDestroy'])->name('admin.ingressos.destroy');
+    Route::get('/pedidos', [AdminController::class, 'pedidosIndex'])->name('admin.pedidos.index');
+});
 
 Route::get('/dashboard', function () {
-    return redirect()->route('admin.dashboard');
+    if (auth()->user()?->is_admin) {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('pedidos.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

@@ -16,8 +16,8 @@ class IsAdmin
     public function handle(Request $request, Closure $next): Response
     {
         // Verifica se usuário está logado E é admin
-        if (!auth()->check() || !auth()->user()->is_admin) {
-            abort(403, 'Acesso não autorizado.');
+        if (! auth()->check() || ! auth()->user()->isAdmin()) {
+            abort(403, 'Acesso restrito a administradores.');
         }
 
         return $next($request);

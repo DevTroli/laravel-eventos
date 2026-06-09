@@ -6,6 +6,7 @@ use App\Models\Ingresso;
 use App\Models\Pedido;
 use App\Models\PedidoItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CarrinhoController extends Controller
 {
@@ -46,6 +47,7 @@ class CarrinhoController extends Controller
             if ($carrinho[$id]['quantidade'] < $ingresso->quantidade) {
                 $carrinho[$id]['quantidade']++;
                 session()->put('carrinho', $carrinho);
+
                 return redirect()->back()->with('sucesso', 'Ingresso adicionado ao carrinho!');
             } else {
                 return redirect()->back()->with('erro', 'Quantidade máxima atingida!');
@@ -85,6 +87,7 @@ class CarrinhoController extends Controller
             if ($ingresso && $quantidade <= $ingresso->quantidade && $quantidade > 0) {
                 $carrinho[$id]['quantidade'] = $quantidade;
                 session()->put('carrinho', $carrinho);
+
                 return redirect()->back()->with('sucesso', 'Carrinho atualizado!');
             }
         }
@@ -94,11 +97,6 @@ class CarrinhoController extends Controller
 
     public function checkout()
     {
-        if (!auth()->check()) {
-            return redirect()->route('login')
-                ->with('info', 'Faça login ou crie uma conta para finalizar sua compra.');
-        }
-
         $carrinho = session()->get('carrinho', []);
 
         if (empty($carrinho)) {
@@ -110,67 +108,65 @@ class CarrinhoController extends Controller
 
     public function confirmar(Request $request)
     {
-        if (!auth()->check()) {
-            return redirect()->route('login')->with('erro', 'Você precisa estar logado para finalizar a compra.');
-        }
-
         $carrinho = session()->get('carrinho', []);
 
         if (empty($carrinho)) {
             return redirect()->route('ingressos.index')->with('erro', 'Seu carrinho está vazio!');
         }
 
-        $total = 0;
-        $itensPedido = [];
+        try {
+            return DB::transaction(function () use ($carrinho) {
+                $total = 0;
+                $itensPedido = [];
 
-        foreach ($carrinho as $ingressoId => $item) {
-            $ingresso = Ingresso::find($ingressoId);
+                foreach ($carrinho as $ingressoId => $item) {
+                    $ingresso = Ingresso::lockForUpdate()->findOrFail($ingressoId);
 
-            if (!$ingresso || $ingresso->quantidade < $item['quantidade']) {
-                return redirect()->back()->with('erro', 'Ingresso não disponível mais!');
-            }
+                    if ($ingresso->quantidade < $item['quantidade']) {
+                        throw new \Exception('Ingresso não disponível mais!');
+                    }
 
-            $subtotal = $ingresso->preco * $item['quantidade'];
-            $total += $subtotal;
+                    $subtotal = $ingresso->preco * $item['quantidade'];
+                    $total += $subtotal;
 
-            $itensPedido[] = [
-                'ingresso' => $ingresso,
-                'quantidade' => $item['quantidade'],
-                'preco_unitario' => $ingresso->preco,
-                'subtotal' => $subtotal,
-            ];
+                    $itensPedido[] = [
+                        'ingresso' => $ingresso,
+                        'quantidade' => $item['quantidade'],
+                        'preco_unitario' => $ingresso->preco,
+                        'subtotal' => $subtotal,
+                    ];
+                }
+
+                $pedido = Pedido::create([
+                    'user_id' => auth()->id(),
+                    'total' => $total,
+                    'status' => 'completed',
+                    'cliente_nome' => auth()->user()->name,
+                    'cliente_email' => auth()->user()->email,
+                ]);
+
+                foreach ($itensPedido as $item) {
+                    PedidoItem::create([
+                        'pedido_id' => $pedido->id,
+                        'ingresso_id' => $item['ingresso']->id,
+                        'quantidade' => $item['quantidade'],
+                        'preco_unitario' => $item['preco_unitario'],
+                    ]);
+
+                    $item['ingresso']->decrement('quantidade', $item['quantidade']);
+                }
+
+                session()->forget('carrinho');
+
+                return redirect()->route('pedidos.show', $pedido->id)->with('sucesso', 'Compra realizada com sucesso!');
+            });
+        } catch (\Exception $e) {
+            return redirect()->back()->with('erro', $e->getMessage());
         }
-
-        $pedido = Pedido::create([
-            'user_id' => auth()->id(),
-            'total' => $total,
-            'status' => 'completed',
-            'cliente_nome' => auth()->user()->name,
-            'cliente_email' => auth()->user()->email,
-        ]);
-
-        foreach ($itensPedido as $item) {
-            PedidoItem::create([
-                'pedido_id' => $pedido->id,
-                'ingresso_id' => $item['ingresso']->id,
-                'quantidade' => $item['quantidade'],
-                'preco_unitario' => $item['preco_unitario'],
-            ]);
-
-            $item['ingresso']->decrement('quantidade', $item['quantidade']);
-        }
-
-        session()->forget('carrinho');
-
-        return redirect()->route('pedidos.show', $pedido->id)->with('sucesso', 'Compra realizada com sucesso!');
     }
 
     public function meusPedidos()
     {
-        if (!auth()->check()) {
-            return redirect()->route('login')->with('erro', 'Faça login para visualizar seus pedidos.');
-        }
-
         $pedidos = Pedido::where('user_id', auth()->id())
             ->with('items.ingresso')
             ->orderBy('created_at', 'desc')
@@ -182,6 +178,11 @@ class CarrinhoController extends Controller
     public function show($id)
     {
         $pedido = Pedido::with('items.ingresso')->findOrFail($id);
+
+        if ($pedido->user_id !== auth()->id()) {
+            abort(403, 'Você não tem permissão para ver este pedido.');
+        }
+
         return view('pedido-detalhe', compact('pedido'));
     }
 }

@@ -42,20 +42,11 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // Primeiro verifica se o email existe no banco
-        $user = \App\Models\User::where('email', $this->string('email'))->first();
-
-        if (!$user) {
-            throw ValidationException::withMessages([
-                'email' => 'Este email não está cadastrado. Crie uma conta primeiro!',
-            ]);
-        }
-
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'password' => 'Senha incorreta. Tente novamente ou recupere sua senha.',
+                'email' => trans('auth.failed'),
             ]);
         }
 
