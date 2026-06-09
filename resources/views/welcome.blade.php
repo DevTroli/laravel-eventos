@@ -23,7 +23,7 @@
                     <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
             </a>
-            <a href="/" class="btn-secondary">Saiba Mais</a>
+            <a href="{{ route('sobre') }}" class="btn-secondary">Saiba Mais</a>
         </div>
     </div>
 </section>

@@ -21,7 +21,7 @@
 
             <div class="form-field">
                 <label for="name">Nome completo</label>
-                <input type="text" id="name" name="name" value="{{ old('name') }}" required autofocus placeholder="Seu nome completo">
+                <input type="text" id="name" name="name" value="{{ old('name') }}" required autofocus placeholder="Seu nome completo" class="@error('name')input-error @enderror">
                 @error('name')
                     <span class="field-error">{{ $message }}</span>
                 @enderror
@@ -29,7 +29,7 @@
 
             <div class="form-field">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required placeholder="seu@email.com">
+                <input type="email" id="email" name="email" value="{{ old('email') }}" required placeholder="seu@email.com" class="@error('email')input-error @enderror">
                 @error('email')
                     <span class="field-error">{{ $message }}</span>
                 @enderror
@@ -37,7 +37,8 @@
 
             <div class="form-field">
                 <label for="password">Senha</label>
-                <input type="password" id="password" name="password" required placeholder="Mínimo 8 caracteres">
+                <input type="password" id="password" name="password" required placeholder="Mínimo 8 caracteres, 1 maiúscula e 1 número" class="@error('password')input-error @enderror">
+                <span class="field-hint">A senha deve ter pelo menos 8 caracteres, uma letra maiúscula e um número.</span>
                 @error('password')
                     <span class="field-error">{{ $message }}</span>
                 @enderror
@@ -45,7 +46,7 @@
 
             <div class="form-field">
                 <label for="password_confirmation">Confirmar senha</label>
-                <input type="password" id="password_confirmation" name="password_confirmation" required placeholder="Repita sua senha">
+                <input type="password" id="password_confirmation" name="password_confirmation" required placeholder="Repita sua senha" class="@error('password_confirmation')input-error @enderror">
                 @error('password_confirmation')
                     <span class="field-error">{{ $message }}</span>
                 @enderror
